@@ -78,9 +78,3 @@ BrewPay(0.001)  # Transfer 0.001 SOL (recommended to start with small amounts)
 7. Sends transaction to Solana network
 8. Waits for confirmation
 9. Returns result with transaction signature
-
-## Security
-
-- Private key is stored locally in file `master_sh/sol_private_key`
-- File should be readable only by owner
-- Recommended to use separate wallet for testing

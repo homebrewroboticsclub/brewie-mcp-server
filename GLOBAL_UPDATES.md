@@ -15,7 +15,7 @@ The robot can now understand you, see what's around it, and do complex tasks saf
 ### New Capabilities:
 -  Voice robot control
 -  AI-powered target detection
--  Cryptocurrency payments via QR codes
+-  Cryptocurrency payments via QR codes (BrewPay)
 -  Voice authentication for safety
 -  Integration with robot's action system
 -  Simple control interface
@@ -311,4 +311,5 @@ brewie-mcp-server/
 7. **Action Integration**: Works with Brewie's existing actions
 
 ---
+
 

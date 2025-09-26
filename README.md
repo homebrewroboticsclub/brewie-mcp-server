@@ -1,111 +1,94 @@
-# ROS MCP Server 🧠⇄🤖
+Based on https://github.com/lpigeon/ros-mcp-server
 
-![Static Badge](https://img.shields.io/badge/ROS-Available-green)
-![Static Badge](https://img.shields.io/badge/ROS2-Available-green)
-![Static Badge](https://img.shields.io/badge/License-Apache%202.0-blue)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![GitHub Repo stars](https://img.shields.io/github/stars/robotmcp/ros-mcp-server?style=social)
-![GitHub last commit](https://img.shields.io/github/last-commit/robotmcp/ros-mcp-server)
+Functionality revised to match the specifics of the Baby Brewie
 
+# Baby Brewie Powered by LLM
 
-<p align="center">
-  <img src="https://github.com/robotmcp/ros-mcp-server/blob/main/docs/images/framework.png"/>
-</p>
+We’re turning the robot into an intuitive and accessible tool using the MCP server!
 
-ROS-MCP-Server connects large language models (such as Claude, GPT, and Gemini) with existing robots giving them bidirectional AI integration.  
+##  Summary
 
-With no changes to existing robot source code, this enables:
-- 🗣 **Commanding the robot in natural language** → instructions are translated into ROS/ROS2 commands.  
-- 👀 **Giving AI full visibility** → subscribe to topics, call services, read sensor data, and monitor robot state in real time.  
+This fork adapts ros-mcp-server for the Brewie robot, adding voice control, AI vision, cryptocurrency payments, and enhanced security—while staying easy to use.
 
+The robot can now listen, see, and act on complex tasks safely, all through simple voice commands.
 
-### ✅ Key Benefits  
+### New Capabilities (see [GLOBAL_UPDATES.md](GLOBAL_UPDATES.md) for more details):
+-  Voice robot control
+-  AI-powered target detection
+-  Cryptocurrency payments via QR codes
+-  Voice authentication for safety/security 
+-  Integration with robot's action system
+-  Streamlined control interface
 
-- **No robot code changes** → only requires adding the `rosbridge` node.  
-- **True two-way communication** → LLMs can both *control* robots and *observe* everything happening in ROS (sensors, topics, parameters).  
-- **ROS1 & ROS2 support** → works with both versions out of the box.  
-- **MCP-compatible** → integrates with any MCP-enabled LLM (Claude Desktop, Gemini, ChatGPT, and beyond).   
+## Key Updates
 
-## 🎥 Examples in Action  
+### Updated ROS Connection Method
+Re-implemented WebSocket handling with the roslibpy library for cleaner, standard ROS communication:, for example:
+```python
+topic = roslibpy.Topic( self.ws, topic, topic_data_type )
+```
+Instead of regular network interaction in the original through JSON:
+```python
+# Ensure message is JSON serializable
+json_msg = json.dumps(message)
+self.ws.send(json_msg) 
+```
+### Added Voice Agent for Seamless Control
+Voice agent extracted into a separate Python file – voice_agent.py for running both on the robot or an external station.
 
-🖥️ **Example - Controlling the MOCA mobile manipulator in NVIDIA Isaac Sim**  
-Commands are entered into Claude Desktop, which uses the MCP server to directly drive the simulated robot.  
+Voice command activation training completed for "Brewie" using Porcupine Wake Word Python API. Models prepared for running on Windows PC and Raspberry PI5 robot:
+* Brewie_en_raspberry-pi_v3_0_0.ppn
+* Brewie_en_windows_v3_0_0.ppn
 
-<p align="center">
-  <img src="https://github.com/robotmcp/ros-mcp-server/blob/main/docs/images/result.gif" />
-</p>  
+When building, specify the appropriate model for your chosen platform.
 
----
-🐕 **Example - Controlling Unitree Go with natural language**  ([video](https://youtu.be/RW9_FgfxWzs?si=8bdhpHNYaupzi9q3))  
-The MCP server enables the Claude to interpret images from the robot's cameras, and then command the robot based on human natural language commands. 
+Wake Word provides quick response to robot interaction with minimal resources.
 
-<p align="left">
-  <img src="https://contoro.com/asset/media/demo_go2.gif" />
-</p>  
+After activation, recording and recognition of robot interaction is performed through the SpeechRecognition package.
 
----
-🏭 **Example - Debugging an industrial robot** ([Video](https://youtu.be/SrHzC5InJDA))  
-- Connecting to an industrial robot enables the LLM to browse all ROS topics and services to assess the robot state. 
-- With no predefined context, the MCP server enables the LLM to query details about custom topic and service types and their syntax (00:28). 
-- Using only natural language, the operator calls the custom services to test and debug the robot(01:42). 
+Next, the text interpretation of the user's request is passed to the LLM. A system prompt is pre-formed and chat history is optionally saved for context (history_active flag). Voice recognition can be disabled and text chat mode selected through the text_input flag (true to disable voice input).
 
-<p align="center">
-  <a href="https://contoroinc.sharepoint.com/:v:/s/SandboxNewBusiness/EVh2t2_YG9BEl-Bw-8k6xucBcEv7XebJv1MtqLTIfrQpig?e=deu3YO">
-    <img src="https://github.com/robotmcp/ros-mcp-server/blob/main/docs/images/Contoro_robot.png" width="400" alt="Testing and debugging an industrial robot" />
-  </a>
-</p>
+LLM work is performed through the Together API (https://together.ai/), any model available for your API key can be selected.
 
----
+Response voicing is implemented through gTTS.
 
-## ⚙️ Features of the ROS MCP Server  
+To reduce delay time, caching of previously voiced responses within the session has been added.
+LLM response hash checking is performed and in case of such in cache, local recording is played.
 
-- **List topics, services, and message types** → explore everything available in your robot’s ROS environment.  
-- **View type definitions (incl. custom)** → understand the structure of any message.  
-- **Publish/subscribe to topics** → send commands or stream robot data in real time.  
-- **Call services (incl. custom)** → trigger robot functions directly.  
-- **Get/set parameters** → read or adjust robot settings on the fly.  
-- 🔜 **Action support** → upcoming support for ROS Actions.  
-- 🔜 **Permission controls** → manage access for safer deployments.  
+### MCP passes Brewie native application Action group files to LLM context.
+Now LLM can access previously created files with robot actions (ActionGroups) in the editor and call them according to context. For this, a tool is implemented in the MCP server get_available_actions()
+Detailed description of added and modified functions is in MCPFUNCTIONS.md
 
----
+It's important to give prepared actions clear names for adequate LLM context perception. If done correctly, AI will be able to call the right action by description or situation, without requiring the user to know the exact name.
 
-## 🛠 Getting Started  
+## You'll Need API Keys!
 
-The MCP server is version-agnostic (ROS1 or ROS2) and works with any MCP-compatible LLM.  
+For https://together.ai/ and https://console.picovoice.ai/ (quick voice activation). Fortunately, they can be obtained for free by registering on the sites.
 
-<p align="center">
-  <img src="https://github.com/robotmcp/ros-mcp-server/blob/main/docs/images/MCP_topology.png"/>
-</p>  
+Keys are passed through environment variables during startup.
 
-### Installation  
+## Quick Start
 
-Follow the [installation guide](docs/installation.md) for step-by-step instructions:  
-1. Clone the repository  
-2. Install `uv` and `rosbridge`  
-3. Install Claude Desktop (or any MCP-enabled client)  
-4. Configure your client to connect to the ROS MCP Server  
-5. Start `rosbridge` on the target robot  
+Run the ROS/action\_groups.py file on the robot to publish current actions, first on the robot then in docker
 
----
+```bash
+docker cp action_groups.py brewie:/home/ubuntu/ros_ws/src
+```
 
-## 📚 More Examples & Tutorials  
+Now deploy the MCP server on the robot or PC (PC must be on the same network as the robot or you'll need to connect a microphone to the robot). If necessary, adjust the ROS IP for network operation.
 
-Browse our [examples](examples) to see the server in action.  
-We welcome community PRs with new examples and integrations!  
+MCP communicates with the agent through STDIO, so it's enough to call the voice agent, it will start the server itself.
 
----
+UV is used for convenient package installation
 
-## 🤝 Contributing  
+To run everything, use the template bat file adding your API keys to it
 
-We love contributions of all kinds:  
-- Bug fixes and documentation updates  
-- New features (e.g., Action support, permissions)  
-- Additional examples and tutorials  
+```bash
+set TOGETHER_API_KEY=Your key
+set WAKEUP_API_KEY=Your key
+uv run voice_agent.py
+```
 
-Check out the [contributing guidelines](docs/contributing.md) and see issues tagged **good first issue** to get started.  
+On the first run, necessary packages will be installed
 
----
-
-## 📜 License  
-
-This project is licensed under the [Apache License 2.0](LICENSE).  
+Now you're ready to experience your robot in a new way with LLM!

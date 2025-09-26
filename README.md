@@ -4,18 +4,18 @@ Functionality revised to match the specifics of the Baby Brewie
 
 # Baby Brewie Powered by LLM
 
-We’re turning the robot into an intuitive and accessible tool using the MCP server!
+With our MCP server, your robot can now process voice commands, parse into subtasks, and call the robots APIs/modules to execute the command. By autonomously chaining actions together, your robot gains real utility.   
 
 ##  Summary
 
-This fork adapts ros-mcp-server for the Brewie robot, adding voice control, AI vision, cryptocurrency payments, and enhanced security—while staying easy to use.
+This fork adapts ros-mcp-server for the Brewie robot, adding voice control, AI vision, cryptocurrency payments via BrewPay, and enhanced security - while remaining user friendly. 
 
 The robot can now listen, see, and act on complex tasks safely, all through simple voice commands.
 
 ### New Capabilities (see [GLOBAL_UPDATES.md](GLOBAL_UPDATES.md) for more details):
 -  Voice robot control
 -  AI-powered target detection
--  Cryptocurrency payments via QR codes
+-  Cryptocurrency payments via QR codes (BrewPay module)
 -  Voice authentication for safety/security 
 -  Integration with robot's action system
 -  Streamlined control interface
@@ -92,3 +92,4 @@ uv run voice_agent.py
 On the first run, necessary packages will be installed
 
 Now you're ready to experience your robot in a new way with LLM!
+

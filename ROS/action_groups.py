@@ -7,29 +7,29 @@ from std_msgs.msg import String
 
 class ActionGroupsPublisher:
     def __init__(self):
-        # Инициализация ноды
+        # Initialization of the node
         rospy.init_node('action_groups_publisher')
         
-        # Путь к папке с данными
+        # Path to the data folder
         self.folder_path = "/home/ubuntu/software/ainex_controller/ActionGroups"
         
-        # Создаем publisher для топика /action_groups_data
+        # Create a publisher for the /action_groups_data topic
         self.pub = rospy.Publisher('/action_groups_data', String, queue_size=10)
         
-        # Таймер для периодической публикации (раз в секунду)
+        # Timer for periodic publishing (once per second)
         rospy.Timer(rospy.Duration(1), self.publish_data)
         
         rospy.loginfo("ActionGroups Publisher запущен и публикует данные в /action_groups_data")
 
     def publish_data(self, event):
         try:
-            # Получаем список файлов в папке
+            # Get the list of files in the folder
             files = os.listdir(self.folder_path)
             
-            # Формируем строку с данными
+            # Form a data string
             data = "ActionGroups: " + ", ".join(files)
             
-            # Публикуем данные
+            # Publish the data
             self.pub.publish(data)
             
         except Exception as e:
@@ -40,4 +40,5 @@ if __name__ == '__main__':
         ActionGroupsPublisher()
         rospy.spin()
     except rospy.ROSInterruptException:
+
         pass

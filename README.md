@@ -2,7 +2,7 @@ Based on https://github.com/lpigeon/ros-mcp-server
 
 Functionality revised to match the specifics of the Baby Brewie
 
-# Baby Brewie Powered by LLM
+# Baby Brewie MCP: Voice-Driven ROS Action Server
 
 With our MCP server, your robot can now process voice commands, parse into subtasks, and call the robots APIs/modules to execute the command. By autonomously chaining actions together, your robot gains real utility.   
 
@@ -92,4 +92,5 @@ uv run voice_agent.py
 On the first run, necessary packages will be installed
 
 Now you're ready to experience your robot in a new way with LLM!
+
 
